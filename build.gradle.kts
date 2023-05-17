@@ -9,19 +9,20 @@ repositories {
     mavenCentral()
 }
 
-val buildScanApi = project.extensions.findByName("buildScan") as BuildScanExtension
+tasks.asciidoctor {
+    sources("index.adoc")
+    sourceDirProperty.set(layout.projectDirectory.dir("docs"))
+    outputDirProperty.set(layout.buildDirectory.dir("docs"))
+}
 
-tasks {
-    build {
-        dependsOn(asciidoctor)
-    }
+tasks.build {
+    dependsOn(tasks.asciidoctor)
+}
 
-    asciidoctor {
-        doFirst {
-            buildScanApi.value("$identityPath#gemPath", inputs.properties["gemPath"].toString())
-        }
-        sources("index.adoc")
-        sourceDirProperty.set(layout.projectDirectory.dir("docs"))
-        outputDirProperty.set(layout.buildDirectory.dir("docs"))
+// Add `gemPath` as custom value
+tasks.asciidoctor {
+    doFirst {
+        val buildScanApi = project.extensions.findByName("buildScan") as BuildScanExtension
+        buildScanApi.value("$identityPath#gemPath", inputs.properties["gemPath"].toString())
     }
 }
