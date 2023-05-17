@@ -9,14 +9,11 @@ repositories {
     mavenCentral()
 }
 
+// Configure the `asciidoctor` task
 tasks.asciidoctor {
     sources("index.adoc")
     sourceDirProperty.set(layout.projectDirectory.dir("docs"))
     outputDirProperty.set(layout.buildDirectory.dir("docs"))
-}
-
-tasks.build {
-    dependsOn(tasks.asciidoctor)
 }
 
 // Add `gemPath` as custom value
